@@ -5,6 +5,7 @@ use std::{
 };
 
 mod engine;
+mod helper;
 
 fn match_file(expr: &str, file_path: &str) -> Result<(), Box<dyn Error>> {
     let f = File::open(file_path)?;
@@ -28,5 +29,18 @@ fn main() -> Result<(), Box<dyn Error>> {
             eprintln!("usage: {} regex file", args[0]);
             Err("invalid arguments".into())
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::engine::do_matching;
+
+    #[test]
+    fn test_do_matching() {
+        // パース失敗
+        assert!(do_matching("+a", "aaa").is_err());
+        // パース成功、マッチ成功
+        assert!(do_matching("a+", "a").unwrap());
     }
 }
